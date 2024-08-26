@@ -13,12 +13,12 @@ export class ExpressServer {
         this.configBodyParser(server);
         this.useRoute(server);
         this.listen(server, port);
-
         return this.server;
     }
 
     public useRoute(app: Express) {
         app.use(routes);
+        console.log('hehe')
     }
 
     public configBodyParser(app: Express) {
