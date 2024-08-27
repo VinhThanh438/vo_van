@@ -1,8 +1,9 @@
 import express, { Request, Response } from 'express'
-import rabbitmq from 'amqplib'
+import { RabbitMQAdapter } from '@common/infrastructure/rabbitmq.adapter'
 const router = express.Router()
 
 router.get('/send', (req: Request, res: Response) => {
+    RabbitMQAdapter.sendMessageToQueue('Bonjour', 'vo-van')
     res.send('send message')
 })
 

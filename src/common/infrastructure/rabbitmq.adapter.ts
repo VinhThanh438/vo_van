@@ -22,15 +22,30 @@ export class RabbitMQAdapter {
         }
     }
 
-    public static async sendMessageToQueue(message: string, queueName: string): Promise<void> {
+    public static async disconnect(): Promise<void> {
+        try {
+            await this.connection.close()
+            await this.channel.close()
+
+            logger.info('Disconnect from RabbitMQ successfully!')
+        } catch (error) {
+            logger.error(error)
+        }
+    }
+
+    public static async sendMessageToQueue(message: string, routingKey: string): Promise<void> {
         try {
             this.channel.publish(
                 EXCHANGE_NAME,
-                queueName, 
+                routingKey, 
                 Buffer.from(message)
             );
         } catch (error) {
             throw new Error(error.message)
         }
+    }
+
+    public static doSomeThing() {
+        this.channel.consume
     }
 }
