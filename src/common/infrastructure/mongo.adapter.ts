@@ -9,7 +9,16 @@ export class MongoAdapter {
             logger.info('db connected successfully!');
         } catch (error) {
             logger.error('can not connect to db!');
-            logger.error(error);
         }
     }
+
+    static async disconnect(): Promise<void> {
+        try {
+            await mongoose.disconnect();
+            logger.info('Disconnect from mongodb successfully!');
+        } catch (error) {
+            logger.error('Disconnect from mongodb failed!', error);
+        }
+    }
+
 }
