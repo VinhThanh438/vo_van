@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { MONGO_URL } from '@config/environment';
 import logger from '@common/logger';
 
-export class ConnectMongoose {
+export class MongoAdapter {
     static async connect(): Promise<void> {
         try {
             await mongoose.connect(MONGO_URL);
