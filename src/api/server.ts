@@ -18,7 +18,6 @@ export class ExpressServer {
 
     public useRoute(app: Express) {
         app.use(routes);
-        console.log('hehe')
     }
 
     public configBodyParser(app: Express) {

@@ -1,6 +1,5 @@
 import express, { Request, Response } from 'express';
 import Redis from 'ioredis';
-import { ConnectRedis } from '@common/infrastructure/redis.adapter';
 
 const option = {
     host: 'localhost',
@@ -19,8 +18,7 @@ router.get('/', (req: Request, res: Response) => {
 
 const subscribeToMessage = (channel: string) => {
     subcriber.subscribe(channel, (err, count) => {
-        if (err) console.log(err);
-        console.log(count);
+        if (err) throw new Error(err.message);
     });
 
     subcriber.on("message", (channel, data) => {

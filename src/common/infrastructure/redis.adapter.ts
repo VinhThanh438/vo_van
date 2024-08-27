@@ -2,16 +2,16 @@ import ioredis, { Redis } from 'ioredis';
 import { REDIS_URL } from '@config/environment';
 import logger from '@common/logger';
 
-export class ConnectRedis {
+export class RedisAdapter {
     private static client: Redis;
     // private static subcriber: Redis;
     private static allClients: Redis[] = [];
 
     static async getClient(): Promise<Redis> {
-        if (!ConnectRedis.client) {
-            await ConnectRedis.connect();
+        if (!RedisAdapter.client) {
+            await RedisAdapter.connect();
         }
-        return ConnectRedis.client;
+        return RedisAdapter.client;
     }
 
     static async connect(overrideClient = true): Promise<Redis> {
@@ -46,10 +46,10 @@ export class ConnectRedis {
         }
 
         if (overrideClient) {
-            ConnectRedis.client = tmp;
+            RedisAdapter.client = tmp;
         }
 
-        ConnectRedis.allClients.push(tmp);
+        RedisAdapter.allClients.push(tmp);
 
         return tmp;
     }
@@ -68,7 +68,7 @@ export class ConnectRedis {
             logger.error('Can not connect to redis!', error);
         });
 
-        ConnectRedis.allClients.push(tmp);
+        RedisAdapter.allClients.push(tmp);
 
         return tmp;
     }
@@ -88,8 +88,8 @@ export class ConnectRedis {
     }
 
     static async get(key: string, shouldDeserialize = false): Promise<unknown> {
-        const value = await (await ConnectRedis.getClient()).get(key);
-        return shouldDeserialize ? ConnectRedis.deserialize(value) : value;
+        const value = await (await RedisAdapter.getClient()).get(key);
+        return shouldDeserialize ? RedisAdapter.deserialize(value) : value;
     }
 
     static async set(
@@ -99,15 +99,15 @@ export class ConnectRedis {
         shouldSerialize = false,
     ): Promise<unknown> {
         const stringValue: string = shouldSerialize
-            ? ConnectRedis.serialize(value)
+            ? RedisAdapter.serialize(value)
             : (value as string);
         if (ttl > 0) {
-            return (await ConnectRedis.getClient()).set(key, stringValue, 'EX', ttl);
+            return (await RedisAdapter.getClient()).set(key, stringValue, 'EX', ttl);
         }
-        return (await ConnectRedis.getClient()).set(key, stringValue);
+        return (await RedisAdapter.getClient()).set(key, stringValue);
     }
 
     static async delete(key: string): Promise<unknown> {
-        return (await ConnectRedis.getClient()).del(key);
+        return (await RedisAdapter.getClient()).del(key);
     }
 }
